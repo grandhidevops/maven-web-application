@@ -1,0 +1,36 @@
+node 
+{
+	
+	def mavenHome = tool name: "maven3.9.2"
+	
+	properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')), [$class: 'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([pollSCM('* * * * *')])])
+	
+	stage('Checkout code')
+	{
+		git branch: 'dev', credentialsId: 'a92791ed-9fe2-471b-9f41-80312505afd4', url: 'https://github.com/grandhidevops/maven-web-application.git'
+	}
+	
+	stage('build')
+	{
+		sh "${mavenHome}/bin/mvn clean package"
+	}
+	
+/*	stage('executeSonarQubeReport')
+	{
+	    sh "${mavenHome}/bin/mvn sonar:sonar"
+	}
+	
+	stage('uploadArtifacttoNexus')
+	{
+	    sh "${mavenHome}/bin/mvn deploy"
+	}
+	
+	stage('DeploytoTomcat')
+	{
+	    sshagent(['<ssh ID>'])
+	    {
+	        sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@13.233.200.129:/opt/apache-tomcat-9.0.76/webapps"
+	    }
+	}   */
+	    
+}

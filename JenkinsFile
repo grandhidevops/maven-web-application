@@ -4,7 +4,11 @@ node
 	def mavenHome = tool name: "maven3.9.2"
 	
 	properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')), [$class: 'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([pollSCM('* * * * *')])])
-	
+
+	echo "Job Name is: ${env.JOB_NAME}
+	echo "Node Name is: ${env.NODE_NAME}
+	echo "Build Number is: ${env.BUILD_NUMBER}
+
 	stage('Checkout code')
 	{
 		git branch: 'dev', credentialsId: 'a92791ed-9fe2-471b-9f41-80312505afd4', url: 'https://github.com/grandhidevops/maven-web-application.git'
@@ -32,5 +36,24 @@ node
 	        sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@13.233.200.129:/opt/apache-tomcat-9.0.76/webapps"
 	    }
 	}   */
+
+	post
+	{
+		success
+		{
+ 			emailext to: 'catchmani.1992@gmail.com',
+          		subject: "Pipeline Build is over .. Build # is ..${env.BUILD_NUMBER} and Build status is.. ${currentBuild.result}.",
+          		body: "Pipeline Build is over .. Build # is ..${env.BUILD_NUMBER} and Build status is.. ${currentBuild.result}.",
+          		replyTo: 'catchmani.1992@gmail.com'
+ 		}
+ 
+ 		failure
+		{
+ 			emailext to: 'catchmani.1992@gmail.com',
+          		subject: "Pipeline Build is over .. Build # is ..${env.BUILD_NUMBER} and Build status is.. ${currentBuild.result}.",
+         		body: "Pipeline Build is over .. Build # is ..${env.BUILD_NUMBER} and Build status is.. ${currentBuild.result}.",
+          		replyTo: 'catchmani.1992@gmail.com'
+ 		}
 	    
+	}
 }

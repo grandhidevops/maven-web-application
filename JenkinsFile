@@ -37,7 +37,7 @@ node
 	    }
 	}   */
 
-	post
+/*	post
 	{
 		success
 		{
@@ -55,5 +55,5 @@ node
           		replyTo: 'catchmani.1992@gmail.com'
  		}
 	    
-	}
+	}	*/
 }
